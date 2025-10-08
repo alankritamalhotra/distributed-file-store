@@ -1,28 +1,28 @@
 # Distributed File Store
 
-## 🚀 Project Overview
+## Project Overview
 
-A high-performance distributed file storage system built with Java, designed to provide reliable, scalable, and fault-tolerant file storage across multiple nodes. This system implements distributed computing principles to handle file operations efficiently across a network of servers.
+This is a distributed file storage system built with Java. The system stores files across multiple nodes to provide reliability and fault tolerance. It uses a client-server architecture where a central server manages metadata and coordinates file operations across storage nodes.
 
-## ✨ Technical Highlights
+## Technical Highlights
 
 - **Distributed Architecture**: Implements a client-server model with support for multiple storage nodes
-- **Fault Tolerance**: Built-in replication and redundancy mechanisms ensure data availability
-- **Concurrent Operations**: Thread-safe design supporting multiple simultaneous client requests
-- **Network Communication**: Efficient socket-based communication protocol for file transfers
-- **Metadata Management**: Centralized metadata tracking for distributed file locations
-- **Modular Design**: Clean separation of concerns with dedicated server, client, and storage components
+- **Fault Tolerance**: Includes replication and redundancy mechanisms to ensure data availability
+- **Concurrent Operations**: Thread-safe design that supports multiple simultaneous client requests
+- **Network Communication**: Uses socket-based communication for file transfers
+- **Metadata Management**: Central server tracks file locations across the distributed system
+- **Modular Design**: Separate components for server, client, and storage functionality
 
-## 📋 Features
+## Features
 
-- **File Upload**: Store files across distributed nodes with automatic load balancing
-- **File Download**: Retrieve files from any available node with automatic failover
-- **File Replication**: Configurable replication factor for data redundancy
+- **File Upload**: Store files across distributed nodes with load balancing
+- **File Download**: Retrieve files from any available node with failover support
+- **File Replication**: Configurable replication factor for redundancy
 - **Node Discovery**: Automatic detection and registration of storage nodes
-- **Health Monitoring**: Real-time monitoring of node availability and status
-- **CLI Interface**: Simple command-line interface for all file operations
+- **Health Monitoring**: Track node availability and status
+- **CLI Interface**: Command-line interface for file operations
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 
@@ -42,81 +42,38 @@ A high-performance distributed file storage system built with Java, designed to 
    ```bash
    # Navigate to the source directory
    cd src
-   
    # Compile all Java files
    javac *.java
    ```
 
-3. **Configure nodes**:
-   - Edit configuration files to set up node addresses and ports
-   - Configure replication factor and storage paths
+## Usage
 
-## 💻 Usage Example
-
-### Starting the Server
+### Step 1: Start the Server
 
 ```bash
-# Start the master server node
-java Server <port_number>
-
-# Example:
-java Server 8080
+java Server 8080 3
 ```
 
-### Starting Storage Nodes
+This starts the central server on port 8080 with a replication factor of 3.
+
+### Step 2: Start Storage Nodes
+
+In separate terminals, start multiple storage nodes:
 
 ```bash
-# Start individual storage nodes
-java StorageNode <server_address> <server_port> <node_port>
+# Terminal 1
+java StorageNode localhost 8080 9001
 
-# Example:
-java StorageNode localhost 8080 8081
-```
-
-### Client Operations
-
-```bash
-# Upload a file
-java Client upload <server_address> <server_port> <file_path>
-
-# Download a file
-java Client download <server_address> <server_port> <file_name> <destination_path>
-
-# List files
-java Client list <server_address> <server_port>
-
-# Example:
-java Client upload localhost 8080 /path/to/myfile.txt
-java Client download localhost 8080 myfile.txt /path/to/destination/
-```
-
-## ✅ Quick Verification Guide
-
-Follow these steps to verify the system works correctly:
-
-### Step 1: Start the Master Server
-
-```bash
-cd src
-javac *.java
-java Server 8080
-```
-
-You should see output indicating the server has started and is listening for connections.
-
-### Step 2: Start Storage Nodes (in separate terminals)
-
-```bash
 # Terminal 2
-java StorageNode localhost 8080 8081
+java StorageNode localhost 8080 9002
 
 # Terminal 3
-java StorageNode localhost 8080 8082
+java StorageNode localhost 8080 9003
 ```
 
-Each node should register successfully with the master server.
+Each storage node connects to the server and registers itself.
 
-### Step 3: Upload a Test File
+### Step 3: Upload a File
 
 ```bash
 # Create a test file
@@ -126,17 +83,17 @@ echo "Hello, Distributed File Store!" > test.txt
 java Client upload localhost 8080 test.txt
 ```
 
-Verify that the upload completes successfully and note the confirmation message.
+The file will be distributed across the available storage nodes.
 
-### Step 4: List Stored Files
+### Step 4: List Files
 
 ```bash
 java Client list localhost 8080
 ```
 
-You should see `test.txt` in the list of stored files.
+This displays all files currently stored in the system.
 
-### Step 5: Download the File
+### Step 5: Download a File
 
 ```bash
 # Download to a new location
@@ -158,7 +115,18 @@ java Client download localhost 8080 test.txt recovered_test.txt
 
 The download should still succeed if replication is configured, demonstrating fault tolerance.
 
-## 🏗️ Architecture
+## Verification
+
+The system has been tested with the following scenarios:
+
+- File upload and download across multiple nodes
+- Node failure and recovery
+- Concurrent client requests
+- Replication and data consistency
+
+You can verify functionality by following the usage steps above and confirming that files are properly stored and retrieved even when individual storage nodes are unavailable.
+
+## Architecture
 
 ```
 ┌──────────────┐
@@ -179,14 +147,14 @@ The download should still succeed if replication is configured, demonstrating fa
 (Storage Nodes)
 ```
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please feel free to submit issues and pull requests.
+Contributions are welcome. Please submit issues and pull requests.
 
-## 📄 License
+## License
 
 This project is available for educational and research purposes.
 
 ---
 
-**Built with ☕ and Java** | Distributed Systems Implementation
+Distributed Systems Implementation
